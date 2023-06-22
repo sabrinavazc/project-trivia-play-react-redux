@@ -1,6 +1,9 @@
 import { Component } from 'react';
+import PropTypes from 'prop-types';
 import { BsFillGearFill } from 'react-icons/bs';
 import { connect } from 'react-redux';
+import { getToken } from '../helpers/fetchTrivia';
+import { actionUser } from '../redux/actions';
 
 class Login extends Component {
   state = {
@@ -10,6 +13,20 @@ class Login extends Component {
 
   handleChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
+  };
+
+  saveGlobalState = () => {
+    const { gravatarEmail, userName } = this.state;
+    const { dispatch } = this.props;
+    dispatch(actionUser(gravatarEmail, userName));
+  };
+
+  saveTokenAndRedirect = async () => {
+    const { history } = this.props;
+    const token = await getToken();
+    localStorage.setItem('token', token.token);
+    this.saveGlobalState();
+    history.push('/game');
   };
 
   render() {
@@ -36,6 +53,7 @@ class Login extends Component {
             data-testid="btn-play"
             disabled={ userName.length < 1
               || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(gravatarEmail) }
+            onClick={ this.saveTokenAndRedirect }
           >
             Jogar
           </button>
@@ -51,5 +69,12 @@ class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func,
+  }).isRequired,
+  dispatch: PropTypes.func.isRequired,
+};
 
 export default connect()(Login);
