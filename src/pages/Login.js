@@ -4,6 +4,7 @@ import { BsFillGearFill } from 'react-icons/bs';
 import { connect } from 'react-redux';
 import { getToken } from '../helpers/fetchTrivia';
 import { actionUser } from '../redux/actions';
+import style from './Login.module.css';
 
 class Login extends Component {
   state = {
@@ -32,9 +33,19 @@ class Login extends Component {
   render() {
     const { gravatarEmail, userName } = this.state;
     return (
-      <main>
-        <form>
+      <main className={ style.main }>
+        <header className={ style.header }>
+          <div className={ style.questions }>
+            <span className={ style.question1 }>?</span>
+            <span className={ style.question2 }>?</span>
+            <span className={ style.question3 }>?</span>
+          </div>
+          <h1 className={ style.h1 }>Trivia</h1>
+        </header>
+        <div className={ style.triangle } />
+        <form className={ style.form }>
           <input
+            className={ style.input }
             type="email"
             name="gravatarEmail"
             placeholder="Qual é o e-mail do seu gravatar?"
@@ -42,6 +53,7 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
           <input
+            className={ style.input }
             type="text"
             name="userName"
             placeholder="Qual seu nome?"
@@ -49,6 +61,7 @@ class Login extends Component {
             onChange={ this.handleChange }
           />
           <button
+            className={ `${style.button} ${style.play}` }
             type="button"
             data-testid="btn-play"
             disabled={ userName.length < 1
@@ -58,10 +71,11 @@ class Login extends Component {
             Jogar
           </button>
           <button
+            className={ `${style.button} ${style.config}` }
             type="button"
             data-testid="btn-settings"
           >
-            <BsFillGearFill />
+            <BsFillGearFill className={ style.gear } />
             Configurações
           </button>
         </form>

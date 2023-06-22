@@ -1,0 +1,131 @@
+.main {
+
+  --green: #2fc18c;
+
+  --purple: #3c1b7a;
+
+  --yellow: #f9ba18;
+
+  --red: #ea5d5d;
+
+  --borderGray: #e1e5eb;
+
+  --_br: 5px;
+
+  --_brLg: 10px;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  position: relative;
+}
+
+.header {
+  aspect-ratio: 1 / 1;
+  border: 6px solid var(--green);
+  border-radius: 50%;
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) , 0 4px 35px 0 rgba(31, 14, 63, 1) inset;
+  padding: 1.5rem;
+  transform: scale(1.03);
+}
+
+.h1 {
+  color: white;
+  font-family: Epilogue , sans-serif;
+  font-size: 4rem;
+  font-weight: 400;
+  line-height: 85px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.questions {
+  text-align: center;
+}
+
+.question1, .question2, .question3 {
+  color: var(--green);
+  display: inline-block;
+  font-family: Arimo , sans-serif;
+  font-size: 8rem;
+  font-weight: 700;
+}
+
+.question1, .question3 {
+  font-size: 6rem;
+}
+
+.question1 {
+  color: var(--yellow);
+  transform: rotate(-20deg);
+}
+
+.question3 {
+  color: var(--red);
+  transform: rotate(20deg);
+}
+
+.triangle {
+  border-left: 18px solid transparent;
+  border-right: 18px solid transparent;
+  border-top: 33px solid var(--green);
+  height: 0;
+  margin-bottom: 1rem;
+  width: 0;
+}
+
+.form {
+  background: white;
+  border-radius: var(--_brLg);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+}
+
+.input, .button {
+  border: 1px solid var(--borderGray);
+  padding: 0.75rem;
+  width: min(500px, 80vw);
+}
+
+.button {
+  border: none;
+  border-radius: var(--_br);
+  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+  color: white;
+  cursor: pointer;
+  font-family: Epilogue , sans-serif;
+  font-weight: 700;
+}
+
+.button:active {
+  transform: scale(0.8);
+  transition: transform 500ms ease-in-out;
+}
+
+.button:disabled {
+  cursor: unset;
+  filter: brightness(70%);
+}
+
+.play {
+  background-color: var(--green);
+  text-transform: uppercase;
+}
+
+.config {
+  background-color: #35906f;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.gear {
+  color: #1d7052;
+}
+
+::placeholder {
+  font-family: Arimo , sans-serif;
+}
