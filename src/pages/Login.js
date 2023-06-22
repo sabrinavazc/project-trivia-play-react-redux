@@ -31,6 +31,7 @@ class Login extends Component {
 
   render() {
     const { gravatarEmail, userName } = this.state;
+    const { history } = this.props;
     return (
       <main>
         <form>
@@ -60,6 +61,7 @@ class Login extends Component {
           <button
             type="button"
             data-testid="btn-settings"
+            onClick={ () => history.push('/settings') }
           >
             <BsFillGearFill />
             Configurações
