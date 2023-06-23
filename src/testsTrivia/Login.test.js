@@ -1,147 +1,139 @@
-import { render, screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import configureStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
+import { act } from 'react-dom/test-utils';
+import 'jest-localstorage-mock';
 import App from '../App';
+import renderWithRouterAndRedux from '../tests/helpers/renderWithRouterAndRedux';
 
-const emailimput = 'test@examples.com';
+const fakeToken = {
+  response_code: 0,
+  response_message: 'Token Generated Successfully!',
+  token: 'cbe265ecd1484db0daac4fbd5a829c6decfbb5d7fc044d18a43e91de5030936e',
+};
 
-describe('Login', () => {
-  const mockStore = configureStore([]);
-  let store;
+function mockFetch() {
+  jest.spyOn(global, 'fetch').mockResolvedValue({
+    json: jest.fn().mockResolvedValue(fakeToken),
+  });
+}
+describe('Testa component Login', () => {
+  const userInfos = ['teste@email.com', 'TriviaUser'];
 
-  beforeEach(() => {
-    store = mockStore({});
+  it('Renderiza corretamente os campos do formulário e a rota é "/"', () => {
+    const { history } = renderWithRouterAndRedux(<App />);
+    const { location: { pathname } } = history;
+
+    expect(screen.getByTestId(/input-gravatar-email/i)).toBeVisible();
+    expect(screen.getByTestId(/input-player-name/i)).toBeVisible();
+    expect(screen.getByTestId('btn-play')).toBeVisible();
+    expect(screen.getByTestId('btn-settings')).toBeVisible();
+    expect(pathname).toBe('/');
   });
 
-  it('deve renderizar corretamente os campos do formulário', () => {
-    const history = createMemoryHistory();
-    render(
-      <Provider store={ store }>
-        <Router history={ history }>
-          <App />
-        </Router>
-      </Provider>,
-    );
-
-    expect(screen.getByTestId(/input-gravatar-email/i)).toBeInTheDocument();
-    expect(screen.getByTestId(/input-player-name/i)).toBeInTheDocument();
-    expect(screen.getByTestId('btn-play')).toBeInTheDocument();
-    expect(screen.getByTestId('btn-settings')).toBeInTheDocument();
-  });
-
-  it('deve habilitar o botão Jogar quando os campos estão preenchidos', () => {
-    const history = createMemoryHistory();
-    render(
-      <Provider store={ store }>
-        <Router history={ history }>
-          <App />
-        </Router>
-      </Provider>,
-    );
+  it('O botão de jogar só é habilitado quando os campos são preenchidos', () => {
+    const [email, name] = userInfos;
+    renderWithRouterAndRedux(<App />);
     const emailInput = screen.getByTestId(/input-gravatar-email/i);
     const nameInput = screen.getByTestId(/input-player-name/i);
     const playButton = screen.getByTestId('btn-play');
 
-    userEvent.type(emailInput, emailimput);
-    userEvent.type(nameInput, 'John Doe');
-
+    act(() => {
+      userEvent.type(emailInput, email);
+    });
+    expect(playButton).toBeDisabled();
+    act(() => {
+      userEvent.clear(emailInput);
+      userEvent.type(nameInput, name);
+    });
+    expect(playButton).toBeDisabled();
+    act(() => {
+      userEvent.type(emailInput, email);
+    });
     expect(playButton).toBeEnabled();
   });
 
-  it('deve desabilitar o botão Jogar quando os campos não estão preenchidos', () => {
-    const history = createMemoryHistory();
-    render(
-      <Provider store={ store }>
-        <Router history={ history }>
-          <App />
-        </Router>
-      </Provider>,
-    );
-
-    const playButton = screen.getByTestId('btn-play');
-
-    expect(playButton).toBeDisabled();
-  });
-
-  it('deve chamar a função de redirecionamento para a página de configurações', () => {
-    const history = createMemoryHistory();
-    render(
-      <Provider store={ store }>
-        <Router history={ history }>
-          <App />
-        </Router>
-      </Provider>,
-    );
-
+  it('Redireciona para "/settings" quando clica no botão de configurações', async () => {
+    const { history } = renderWithRouterAndRedux(<App />);
     const settingsButton = screen.getByTestId('btn-settings');
-    userEvent.click(settingsButton);
+    act(() => {
+      userEvent.click(settingsButton);
+    });
 
-    expect(history.location.pathname).toBe('/settings');
+    await waitFor(() => {
+      const { location: { pathname } } = history;
+      expect(pathname).toBe('/settings');
+    });
   });
 
-  it('deve limpar os campos de e-mail e nome após o envio bem-sucedido', () => {
-    const history = createMemoryHistory();
-    render(
-      <Provider store={ store }>
-        <Router history={ history }>
-          <App />
-        </Router>
-      </Provider>,
-    );
+  it(
+    'No clique no botão de jogar o fetch é chamado e o token é guardado no localStorage',
+    async () => {
+      mockFetch();
+      const [email, name] = userInfos;
 
-    const emailInput = screen.getByTestId('input-gravatar-email');
+      renderWithRouterAndRedux(<App />);
+
+      const emailInput = screen.getByTestId(/input-gravatar-email/i);
+      const nameInput = screen.getByTestId(/input-player-name/i);
+      const playButton = screen.getByTestId('btn-play');
+
+      act(() => {
+        userEvent.type(emailInput, email);
+        userEvent.type(nameInput, name);
+        userEvent.click(playButton);
+      });
+
+      const { token } = fakeToken;
+
+      await waitFor(() => {
+        expect(global.fetch).toHaveBeenCalled();
+        expect(localStorage.setItem).toHaveBeenCalledWith('token', token);
+      });
+    },
+  );
+
+  it('Email e nome são salvos no estado global após clicar em Jogar', async () => {
+    mockFetch();
+    const [userEmail, userName] = userInfos;
+
+    const { store } = renderWithRouterAndRedux(<App />);
+
+    const emailInput = screen.getByTestId(/input-gravatar-email/i);
     const nameInput = screen.getByTestId(/input-player-name/i);
     const playButton = screen.getByTestId('btn-play');
 
-    userEvent.type(emailInput, 'test@examsple.com');
-    userEvent.type(nameInput, 'John Doe');
+    act(() => {
+      userEvent.type(emailInput, userEmail);
+      userEvent.type(nameInput, userName);
+      userEvent.click(playButton);
+    });
 
-    expect(emailInput).toHaveValue('test@examsple.com');
-    expect(nameInput).toHaveValue('John Doe');
-
-    userEvent.click(playButton);
+    await waitFor(() => {
+      const { player: { email, name } } = store.getState();
+      expect(email).toBe(userEmail);
+      expect(name).toBe(userName);
+    });
   });
 
-  it('deve desabilitar o botão Jogar quando o campo de e-mail está vazio', () => {
-    const history = createMemoryHistory();
-    render(
-      <Provider store={ store }>
-        <Router history={ history }>
-          <App />
-        </Router>
-      </Provider>,
-    );
+  it('Após clicar no botão de Jogar é redirecionado para a rota "/game"', async () => {
+    mockFetch();
+    const [email, name] = userInfos;
 
-    const nameInput = screen.getByTestId('input-player-name');
+    const { history } = renderWithRouterAndRedux(<App />);
+
+    const emailInput = screen.getByTestId(/input-gravatar-email/i);
+    const nameInput = screen.getByTestId(/input-player-name/i);
     const playButton = screen.getByTestId('btn-play');
 
-    userEvent.type(nameInput, 'John Doe');
+    act(() => {
+      userEvent.type(emailInput, email);
+      userEvent.type(nameInput, name);
+      userEvent.click(playButton);
+    });
 
-    expect(playButton).toBeDisabled();
-  });
-
-  it('deve redirecionar para a página "/game" após o clique no botão Jogar', () => {
-    const history = createMemoryHistory();
-    render(
-      <Provider store={ store }>
-        <Router history={ history }>
-          <App />
-        </Router>
-      </Provider>,
-    );
-
-    const emailInput = screen.getByTestId('input-gravatar-email');
-    const nameInput = screen.getByTestId('input-player-name');
-    const playButton = screen.getByTestId('btn-play');
-
-    userEvent.type(emailInput, 'test@example.com');
-    userEvent.type(nameInput, 'John Doe');
-
-    userEvent.click(playButton);
-
-    expect(history.location.pathname).toBe('/');
+    await waitFor(() => {
+      const { location: { pathname } } = history;
+      expect(pathname).toBe('/game');
+    });
   });
 });

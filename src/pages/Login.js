@@ -21,8 +21,8 @@ class Login extends Component {
     this.setState({ [name]: value });
   };
 
-  handleClick = async () => {
-    const timeOut = 950;
+  handlePlayClick = async () => {
+    const timeOutPlay = 950;
     const { history, dispatch } = this.props;
     const { email, name } = this.state;
 
@@ -30,16 +30,26 @@ class Login extends Component {
 
     this.timer = setTimeout(() => {
       history.push('/game');
-    }, timeOut);
+    }, timeOutPlay);
 
     const { token } = await getToken();
     localStorage.setItem('token', token);
     dispatch(actionUser({ email, name }));
   };
 
+  handleSettingsClick = () => {
+    const timeOutSettings = 800;
+    const { history } = this.props;
+
+    document.querySelector(`.${style.loginWrapper}`).classList.add(style.exit);
+
+    this.timer = setTimeout(() => {
+      history.push('/settings');
+    }, timeOutSettings);
+  };
+
   render() {
     const { email, name } = this.state;
-    const { history } = this.props;
     return (
       <div className={ style.loginWrapper }>
         <div className={ style.headerWrapper }>
@@ -69,7 +79,7 @@ class Login extends Component {
               data-testid="btn-play"
               disabled={ name.length < 1
                 || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) }
-              onClick={ this.handleClick }
+              onClick={ this.handlePlayClick }
             >
               Jogar
             </button>
@@ -77,7 +87,7 @@ class Login extends Component {
               className={ `${style.button} ${style.config}` }
               type="button"
               data-testid="btn-settings"
-              onClick={ () => history.push('/settings') }
+              onClick={ this.handleSettingsClick }
             >
               <BsFillGearFill className={ style.gear } />
               Configurações
