@@ -16,7 +16,7 @@ class Feedback extends Component {
 
   render() {
     const { assertions, score } = this.props;
-    const POINTS = 3;
+    const points = 3;
 
     return (
       <div>
@@ -25,7 +25,7 @@ class Feedback extends Component {
         <p data-testid="feedback-total-question">{assertions}</p>
         <p data-testid="feedback-text">
           {
-            assertions < POINTS ? 'Could be better...' : 'Well Done!'
+            assertions < points ? 'Could be better...' : 'Well Done!'
           }
         </p>
         <button
