@@ -4,6 +4,7 @@ import { BsFillGearFill } from 'react-icons/bs';
 import { connect } from 'react-redux';
 import { actionUser } from '../redux/actions';
 import { getToken } from '../helpers/fetchTrivia';
+import Logo from '../components/Logo';
 import style from './Login.module.css';
 
 class Login extends Component {
@@ -42,15 +43,7 @@ class Login extends Component {
     return (
       <div className={ style.loginWrapper }>
         <div className={ style.headerWrapper }>
-          <header className={ style.header }>
-            <div className={ style.questions }>
-              <span className={ style.question1 }>?</span>
-              <span className={ style.question2 }>?</span>
-              <span className={ style.question3 }>?</span>
-            </div>
-            <h1 className={ style.h1 }>Trivia</h1>
-          </header>
-          <div className={ style.triangle } />
+          <Logo />
         </div>
         <main>
           <form className={ style.form }>

@@ -28,60 +28,6 @@
   margin-inline: auto;
 }
 
-.header {
-  aspect-ratio: 1 / 1;
-  border: 6px solid var(--green);
-  border-radius: 50%;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25) , 0 4px 35px 0 rgba(31, 14, 63, 1) inset;
-  padding: 0.2rem;
-  transform: scale(1.03);
-}
-
-.h1 {
-  color: white;
-  font-family: Epilogue , sans-serif;
-  font-size: 4rem;
-  font-weight: 400;
-  line-height: 85px;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-.questions {
-  text-align: center;
-}
-
-.question1, .question2, .question3 {
-  color: var(--green);
-  display: inline-block;
-  font-family: Arimo , sans-serif;
-  font-size: 8rem;
-  font-weight: 700;
-}
-
-.question1, .question3 {
-  font-size: 6rem;
-}
-
-.question1 {
-  color: var(--yellow);
-  transform: rotate(-20deg);
-}
-
-.question3 {
-  color: var(--red);
-  transform: rotate(20deg);
-}
-
-.triangle {
-  border-left: 18px solid transparent;
-  border-right: 18px solid transparent;
-  border-top: 33px solid var(--green);
-  height: 0;
-  margin-inline: auto;
-  width: 0;
-}
-
 .exit {
   animation: slide-out-elliptic-bottom-bck 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
