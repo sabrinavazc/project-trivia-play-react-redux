@@ -25,7 +25,7 @@ class Login extends Component {
     const { history, dispatch } = this.props;
     const { email, name } = this.state;
 
-    document.querySelector('main').classList.add(style.exit);
+    document.querySelector(`.${style.loginWrapper}`).classList.add(style.exit);
 
     this.timer = setTimeout(() => {
       history.push('/game');
@@ -40,8 +40,8 @@ class Login extends Component {
     const { email, name } = this.state;
     const { history } = this.props;
     return (
-      <main className={ style.main }>
-        <div className={ style.wrapper }>
+      <div className={ style.loginWrapper }>
+        <div className={ style.headerWrapper }>
           <header className={ style.header }>
             <div className={ style.questions }>
               <span className={ style.question1 }>?</span>
@@ -52,44 +52,46 @@ class Login extends Component {
           </header>
           <div className={ style.triangle } />
         </div>
-        <form className={ style.form }>
-          <input
-            className={ style.input }
-            type="email"
-            name="email"
-            placeholder="Qual é o e-mail do seu gravatar?"
-            data-testid="input-gravatar-email"
-            onChange={ this.handleChange }
-          />
-          <input
-            className={ style.input }
-            type="text"
-            name="name"
-            placeholder="Qual seu nome?"
-            data-testid="input-player-name"
-            onChange={ this.handleChange }
-          />
-          <button
-            className={ `${style.button} ${style.play}` }
-            type="button"
-            data-testid="btn-play"
-            disabled={ name.length < 1
-              || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) }
-            onClick={ this.handleClick }
-          >
-            Jogar
-          </button>
-          <button
-            className={ `${style.button} ${style.config}` }
-            type="button"
-            data-testid="btn-settings"
-            onClick={ () => history.push('/settings') }
-          >
-            <BsFillGearFill className={ style.gear } />
-            Configurações
-          </button>
-        </form>
-      </main>
+        <main>
+          <form className={ style.form }>
+            <input
+              className={ style.input }
+              type="email"
+              name="email"
+              placeholder="Qual é o e-mail do seu gravatar?"
+              data-testid="input-gravatar-email"
+              onChange={ this.handleChange }
+            />
+            <input
+              className={ style.input }
+              type="text"
+              name="name"
+              placeholder="Qual seu nome?"
+              data-testid="input-player-name"
+              onChange={ this.handleChange }
+            />
+            <button
+              className={ `${style.button} ${style.play}` }
+              type="button"
+              data-testid="btn-play"
+              disabled={ name.length < 1
+                || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email) }
+              onClick={ this.handleClick }
+            >
+              Jogar
+            </button>
+            <button
+              className={ `${style.button} ${style.config}` }
+              type="button"
+              data-testid="btn-settings"
+              onClick={ () => history.push('/settings') }
+            >
+              <BsFillGearFill className={ style.gear } />
+              Configurações
+            </button>
+          </form>
+        </main>
+      </div>
     );
   }
 }
