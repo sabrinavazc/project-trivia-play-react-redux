@@ -12,17 +12,28 @@ class Login extends Component {
     name: '',
   };
 
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
+
   handleChange = ({ target: { name, value } }) => {
     this.setState({ [name]: value });
   };
 
   handleClick = async () => {
+    const timeOut = 950;
     const { history, dispatch } = this.props;
     const { email, name } = this.state;
+
+    document.querySelector('main').classList.add(style.exit);
+
+    this.timer = setTimeout(() => {
+      history.push('/game');
+    }, timeOut);
+
     const { token } = await getToken();
     localStorage.setItem('token', token);
     dispatch(actionUser({ email, name }));
-    history.push('/game');
   };
 
   render() {
@@ -30,15 +41,17 @@ class Login extends Component {
     const { history } = this.props;
     return (
       <main className={ style.main }>
-        <header className={ style.header }>
-          <div className={ style.questions }>
-            <span className={ style.question1 }>?</span>
-            <span className={ style.question2 }>?</span>
-            <span className={ style.question3 }>?</span>
-          </div>
-          <h1 className={ style.h1 }>Trivia</h1>
-        </header>
-        <div className={ style.triangle } />
+        <div className={ style.wrapper }>
+          <header className={ style.header }>
+            <div className={ style.questions }>
+              <span className={ style.question1 }>?</span>
+              <span className={ style.question2 }>?</span>
+              <span className={ style.question3 }>?</span>
+            </div>
+            <h1 className={ style.h1 }>Trivia</h1>
+          </header>
+          <div className={ style.triangle } />
+        </div>
         <form className={ style.form }>
           <input
             className={ style.input }
