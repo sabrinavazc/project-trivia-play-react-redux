@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
+// import { FaCheck } from 'react-icons/fa';
+// import { ImCross } from 'react-icons/im';
 import Header from '../components/Header';
 import fetchQuestions from '../helpers/fetchQuestions';
 import Loading from '../components/Loading';
+import style from './Game.module.css';
 
 class Game extends Component {
   state = {
@@ -23,6 +26,18 @@ class Game extends Component {
     const questions = await fetchQuestions(token);
     if (questions.response_code === badResponseCode) history.push('/');
     this.setState({ questions: questions.results });
+  };
+
+  onAlternativeBtnClick = () => {
+    const { questions, questionIndex } = this.state;
+    const alternativeBtns = document.querySelectorAll(`.${style.buttons}`);
+    alternativeBtns.forEach((btn) => {
+      if (parse(questions[questionIndex].correct_answer) === btn.textContent) {
+        btn.classList.add(style.correct);
+      } else {
+        btn.classList.add(style.incorrect);
+      }
+    });
   };
 
   render() {
@@ -50,6 +65,7 @@ class Game extends Component {
       alternatives[j] = temp;
     }
 
+    // const letters = ['A', 'B', 'C', 'D'];
     let incorrectIndex = 0;
     return (
       <>
@@ -67,26 +83,43 @@ class Game extends Component {
               )
             }
           </section>
-          <section data-testid="answer-options">
+          <section
+            data-testid="answer-options"
+            className={ style.alternatives }
+          >
             {
-              alternatives.map((alternative) => {
+              alternatives.map((alternative/* , index */) => {
                 if (question.incorrect_answers.includes(alternative)) {
                   incorrectIndex += 1;
                   return (
                     <button
                       key={ alternative }
+                      className={ style.buttons }
                       data-testid={ `wrong-answer-${incorrectIndex - 1}` }
+                      onClick={ this.onAlternativeBtnClick }
                     >
-                      { alternative }
+                      {/* <span */}
+                      {/*   className={ style.letters } */}
+                      {/* > */}
+                      {/*   { letters[index] } */}
+                      {/* </span> */}
+                      { parse(`${alternative}`) }
                     </button>
                   );
                 }
                 return (
                   <button
                     key={ alternative }
+                    className={ style.buttons }
                     data-testid="correct-answer"
+                    onClick={ this.onAlternativeBtnClick }
                   >
-                    { alternative }
+                    {/* <span */}
+                    {/*   className={ style.letters } */}
+                    {/* > */}
+                    {/*   { letters[index] } */}
+                    {/* </span> */}
+                    { parse(`${alternative}`) }
                   </button>
                 );
               })

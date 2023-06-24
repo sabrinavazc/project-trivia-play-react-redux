@@ -1,0 +1,49 @@
+.alternatives {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.buttons, .letters {
+  font-family: Epilogue , sans-serif;
+}
+
+.buttons {
+  align-items: center;
+  background-color: white;
+  border: 3px solid transparent;
+  border-radius: 2rem;
+  color: black;
+  display: flex;
+  font-size: 1rem;
+  justify-content: flex-start;
+  padding: 0.3rem;
+  width: 25rem;
+}
+
+.buttons:active {
+  transform: scale(0.8);
+  transition: transform 500ms ease-in-out;
+}
+
+.letters {
+  align-items: center;
+  background-color: var(--generalGray);
+  border-radius: 50%;
+  color: white;
+  display: inline-flex;
+  font-weight: 700;
+  height: 2.3rem;
+  justify-content: center;
+  justify-self: flex-start;
+  margin-right: 1rem;
+  width: 2.3rem;
+}
+
+.correct {
+  border: 3px solid rgb(6, 240, 15);
+}
+
+.incorrect {
+  border: 3px solid red;
+}
