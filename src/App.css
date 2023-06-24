@@ -6,6 +6,23 @@
   padding: 0;
 }
 
+:root {
+
+  --green: #2fc18c;
+
+  --purple: #3c1b7a;
+
+  --yellow: #f9ba18;
+
+  --red: #ea5d5d;
+
+  --borderGray: #e1e5eb;
+
+  --_br: 5px;
+
+  --_brLg: 10px;
+}
+
 html {
   background-attachment: fixed;
   background-color: #3c1b7a;

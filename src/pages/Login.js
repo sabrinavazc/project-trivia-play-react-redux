@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { BsFillGearFill } from 'react-icons/bs';
 import { connect } from 'react-redux';
 import { actionUser } from '../redux/actions';
-import { getToken } from '../helpers/fetchTrivia';
+import { getToken } from '../helpers/fetchToken';
 import Logo from '../components/Logo';
 import style from './Login.module.css';
 
