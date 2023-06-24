@@ -1,18 +1,4 @@
 .loginWrapper {
-
-  --green: #2fc18c;
-
-  --purple: #3c1b7a;
-
-  --yellow: #f9ba18;
-
-  --red: #ea5d5d;
-
-  --borderGray: #e1e5eb;
-
-  --_br: 5px;
-
-  --_brLg: 10px;
   align-items: center;
   animation: slide-in-elliptic-bottom-fwd 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
   display: flex;

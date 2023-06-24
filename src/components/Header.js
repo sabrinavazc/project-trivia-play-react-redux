@@ -2,6 +2,7 @@ import md5 from 'crypto-js/md5';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { BsFillStarFill } from 'react-icons/bs';
 
 class Header extends Component {
   state = {
@@ -27,7 +28,12 @@ class Header extends Component {
       <header>
         <img data-testid="header-profile-picture" src={ photo } alt={ name } />
         <p data-testid="header-player-name">{ name }</p>
-        <p data-testid="header-score">{ score }</p>
+        <p data-testid="header-score">
+          <BsFillStarFill />
+          Pontos:
+          { ' ' }
+          { score }
+        </p>
       </header>
     );
   }
