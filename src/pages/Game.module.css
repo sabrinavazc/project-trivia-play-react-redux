@@ -1,15 +1,10 @@
 .alternatives {
-  display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
+  align-items: center;
+  display: grid;
+  gap: 0.9rem 0;
+  grid-template-columns: 0 auto;
   list-style: none;
   padding: 1rem;
-}
-
-.li {
-  border: 3px solid transparent;
-  border-radius: 2rem;
-  width: 30rem;
 }
 
 .buttons, .letters {
@@ -17,16 +12,20 @@
 }
 
 .buttons {
-  align-items: center;
   background-color: white;
-  border: none;
+  border: 3px solid transparent;
   border-radius: 2rem;
   color: black;
-  display: flex;
+  cursor: pointer;
   font-size: 1rem;
-  justify-content: flex-start;
   padding: 0.7rem;
-  width: 100%;
+  width: 30rem;
+}
+
+.buttons:disabled {
+  cursor: unset;
+  filter: brightness(70%);
+  transform: none;
 }
 
 .buttons:active {
@@ -44,8 +43,9 @@
   height: 2.3rem;
   justify-content: center;
   justify-self: flex-start;
-  margin-right: 1rem;
+  margin-left: 0.3rem;
   width: 2.3rem;
+  z-index: 1;
 }
 
 .correct {

@@ -11,10 +11,19 @@ class Game extends Component {
     questions: [],
     questionIndex: 0,
     isCorrect: false,
+    isDisabled: false,
   };
 
   componentDidMount() {
     this.getQuestions();
+    const INTERVAL = 30000;
+    this.timer = setTimeout(() => {
+      this.setState({ isDisabled: true });
+    }, INTERVAL);
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.timer);
   }
 
   getQuestions = async () => {
@@ -49,7 +58,7 @@ class Game extends Component {
   };
 
   render() {
-    const { questions, questionIndex, isCorrect } = this.state;
+    const { questions, questionIndex, isCorrect, isDisabled } = this.state;
 
     if (questions.length === 0) {
       return (
@@ -62,8 +71,8 @@ class Game extends Component {
     const question = questions[questionIndex];
     const { alternatives } = question;
 
-    // const letters = ['A', 'B', 'C', 'D'];
     let incorrectIndex = 0;
+    const letters = ['A', 'B', 'C', 'D'];
     return (
       <>
         <Header />
@@ -80,48 +89,48 @@ class Game extends Component {
               )
             }
           </section>
-          <ul
+          <section
             data-testid="answer-options"
             className={ style.alternatives }
           >
             {
-              alternatives.map((alternative) => {
+              alternatives.map((alternative, index) => {
                 if (question.incorrect_answers.includes(alternative)) {
                   incorrectIndex += 1;
                   return (
-                    <li
-                      key={ alternative }
-                      data-testid={ `wrong-answer-${incorrectIndex - 1}` }
-                      className={ `${style.li} ${isCorrect && style.incorrect}` }
-                    >
+                    <>
+                      <span className={ style.letters }>{ letters[index] }</span>
                       <button
                         key={ alternative }
-                        className={ style.buttons }
+                        type="button"
+                        data-testid={ `wrong-answer-${incorrectIndex - 1}` }
+                        className={ `${style.buttons} ${isCorrect && style.incorrect}` }
                         onClick={ this.onAlternativeBtnClick }
+                        disabled={ isDisabled }
                       >
                         { parse(`${alternative}`) }
                       </button>
-                    </li>
+                    </>
                   );
                 }
                 return (
-                  <li
-                    key={ alternative }
-                    data-testid="correct-answer"
-                    className={ `${style.li} ${isCorrect && style.correct}` }
-                  >
+                  <>
+                    <span className={ style.letters }>{ letters[index] }</span>
                     <button
                       key={ alternative }
-                      className={ style.buttons }
+                      type="button"
+                      data-testid="correct-answer"
+                      className={ `${style.buttons} ${isCorrect && style.correct}` }
                       onClick={ this.onAlternativeBtnClick }
+                      disabled={ isDisabled }
                     >
                       { parse(`${alternative}`) }
                     </button>
-                  </li>
+                  </>
                 );
               })
             }
-          </ul>
+          </section>
         </main>
       </>
     );
