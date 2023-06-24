@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
-// import { FaCheck } from 'react-icons/fa';
-// import { ImCross } from 'react-icons/im';
 import Header from '../components/Header';
 import fetchQuestions from '../helpers/fetchQuestions';
 import Loading from '../components/Loading';
@@ -12,6 +10,7 @@ class Game extends Component {
   state = {
     questions: [],
     questionIndex: 0,
+    isCorrect: false,
   };
 
   componentDidMount() {
@@ -25,23 +24,32 @@ class Game extends Component {
     if (!token) history.push('/');
     const questions = await fetchQuestions(token);
     if (questions.response_code === badResponseCode) history.push('/');
-    this.setState({ questions: questions.results });
+
+    const { results } = questions;
+    results.forEach((question) => {
+      const alternatives = [
+        ...question.incorrect_answers,
+        question.correct_answer,
+      ];
+
+      for (let index = alternatives.length - 1; index > 0; index -= 1) {
+        const j = Math.floor(Math.random() * (index + 1));
+        const temp = alternatives[index];
+        alternatives[index] = alternatives[j];
+        alternatives[j] = temp;
+      }
+
+      question.alternatives = alternatives;
+    });
+    this.setState({ questions: results });
   };
 
   onAlternativeBtnClick = () => {
-    const { questions, questionIndex } = this.state;
-    const alternativeBtns = document.querySelectorAll(`.${style.buttons}`);
-    alternativeBtns.forEach((btn) => {
-      if (parse(questions[questionIndex].correct_answer) === btn.textContent) {
-        btn.classList.add(style.correct);
-      } else {
-        btn.classList.add(style.incorrect);
-      }
-    });
+    this.setState({ isCorrect: true });
   };
 
   render() {
-    const { questions, questionIndex } = this.state;
+    const { questions, questionIndex, isCorrect } = this.state;
 
     if (questions.length === 0) {
       return (
@@ -51,19 +59,8 @@ class Game extends Component {
       );
     }
 
-    const alternatives = [
-      ...questions[questionIndex].incorrect_answers,
-      questions[questionIndex].correct_answer,
-    ];
-
     const question = questions[questionIndex];
-
-    for (let index = (alternatives.length - 1); index > 0; index -= 1) {
-      const j = Math.floor(Math.random() * (index + 1));
-      const temp = alternatives[index];
-      alternatives[index] = alternatives[j];
-      alternatives[j] = temp;
-    }
+    const { alternatives } = question;
 
     // const letters = ['A', 'B', 'C', 'D'];
     let incorrectIndex = 0;
@@ -83,48 +80,48 @@ class Game extends Component {
               )
             }
           </section>
-          <section
+          <ul
             data-testid="answer-options"
             className={ style.alternatives }
           >
             {
-              alternatives.map((alternative/* , index */) => {
+              alternatives.map((alternative) => {
                 if (question.incorrect_answers.includes(alternative)) {
                   incorrectIndex += 1;
                   return (
-                    <button
+                    <li
                       key={ alternative }
-                      className={ style.buttons }
                       data-testid={ `wrong-answer-${incorrectIndex - 1}` }
-                      onClick={ this.onAlternativeBtnClick }
+                      className={ `${style.li} ${isCorrect && style.incorrect}` }
                     >
-                      {/* <span */}
-                      {/*   className={ style.letters } */}
-                      {/* > */}
-                      {/*   { letters[index] } */}
-                      {/* </span> */}
-                      { parse(`${alternative}`) }
-                    </button>
+                      <button
+                        key={ alternative }
+                        className={ style.buttons }
+                        onClick={ this.onAlternativeBtnClick }
+                      >
+                        { parse(`${alternative}`) }
+                      </button>
+                    </li>
                   );
                 }
                 return (
-                  <button
+                  <li
                     key={ alternative }
-                    className={ style.buttons }
                     data-testid="correct-answer"
-                    onClick={ this.onAlternativeBtnClick }
+                    className={ `${style.li} ${isCorrect && style.correct}` }
                   >
-                    {/* <span */}
-                    {/*   className={ style.letters } */}
-                    {/* > */}
-                    {/*   { letters[index] } */}
-                    {/* </span> */}
-                    { parse(`${alternative}`) }
-                  </button>
+                    <button
+                      key={ alternative }
+                      className={ style.buttons }
+                      onClick={ this.onAlternativeBtnClick }
+                    >
+                      { parse(`${alternative}`) }
+                    </button>
+                  </li>
                 );
               })
             }
-          </section>
+          </ul>
         </main>
       </>
     );
