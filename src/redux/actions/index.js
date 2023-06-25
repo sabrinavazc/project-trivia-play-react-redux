@@ -10,4 +10,3 @@ export const getRights = (payload) => ({
   type: GET_RIGHTS,
   payload,
 });
-

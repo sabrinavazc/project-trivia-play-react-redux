@@ -32,4 +32,3 @@ const player = (state = INITAL_STATE, action) => {
 };
 
 export default player;
-
