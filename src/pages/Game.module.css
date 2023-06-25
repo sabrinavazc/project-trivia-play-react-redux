@@ -50,8 +50,10 @@
 
 .correct {
   border: 3px solid rgb(6, 240, 15);
+  box-shadow: 0 -1px 16px 0 rgba(47, 193, 140, 1);
 }
 
 .incorrect {
   border: 3px solid red;
+  box-shadow: 0 0 22px 0 rgba(184, 59, 59, 1);
 }

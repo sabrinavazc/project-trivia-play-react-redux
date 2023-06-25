@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
+import { connect } from 'react-redux';
 import Header from '../components/Header';
 import fetchQuestions from '../helpers/fetchQuestions';
 import Loading from '../components/Loading';
 import style from './Game.module.css';
+import { updateScore } from '../redux/actions';
 
 class Game extends Component {
   state = {
@@ -12,19 +14,44 @@ class Game extends Component {
     questionIndex: 0,
     isCorrect: false,
     isDisabled: false,
+    timeRemaining: 0,
   };
 
   componentDidMount() {
     this.getQuestions();
-    const INTERVAL = 30000;
+    this.interval = 30000;
+    this.start = Date.now();
     this.timer = setTimeout(() => {
       this.setState({ isDisabled: true });
-    }, INTERVAL);
+    }, this.interval);
   }
 
   componentWillUnmount() {
     clearTimeout(this.timer);
   }
+
+  onAlternativeBtnClick = (alternative) => {
+    const msConverter = 1000;
+    clearTimeout(this.timer);
+    const elapsed = Date.now() - this.start;
+    const remainingMs = this.interval - elapsed;
+    const timeRemaining = Math.floor(remainingMs / msConverter);
+    this.setState({ isCorrect: true, timeRemaining }, () => {
+      this.callUpdateScore(alternative);
+    });
+  };
+
+  callUpdateScore = (alternative) => {
+    const { questions, questionIndex, timeRemaining } = this.state;
+    const { dispatch } = this.props;
+    const { difficulty } = questions[questionIndex];
+    const baseScore = 10;
+    const levels = { easy: 1, medium: 2, hard: 3 };
+    if (alternative === questions[questionIndex].correct_answer) {
+      const finalScore = (baseScore + (timeRemaining * levels[difficulty]));
+      dispatch(updateScore(finalScore));
+    }
+  };
 
   getQuestions = async () => {
     const { history } = this.props;
@@ -51,10 +78,6 @@ class Game extends Component {
       question.alternatives = alternatives;
     });
     this.setState({ questions: results });
-  };
-
-  onAlternativeBtnClick = () => {
-    this.setState({ isCorrect: true });
   };
 
   render() {
@@ -99,13 +122,18 @@ class Game extends Component {
                   incorrectIndex += 1;
                   return (
                     <>
-                      <span className={ style.letters }>{ letters[index] }</span>
+                      <span
+                        key={ letters[index] + alternative }
+                        className={ style.letters }
+                      >
+                        { letters[index] }
+                      </span>
                       <button
                         key={ alternative }
                         type="button"
                         data-testid={ `wrong-answer-${incorrectIndex - 1}` }
                         className={ `${style.buttons} ${isCorrect && style.incorrect}` }
-                        onClick={ this.onAlternativeBtnClick }
+                        onClick={ () => this.onAlternativeBtnClick(alternative) }
                         disabled={ isDisabled }
                       >
                         { parse(`${alternative}`) }
@@ -115,13 +143,18 @@ class Game extends Component {
                 }
                 return (
                   <>
-                    <span className={ style.letters }>{ letters[index] }</span>
+                    <span
+                      key={ letters[index] + alternative }
+                      className={ style.letters }
+                    >
+                      { letters[index] }
+                    </span>
                     <button
                       key={ alternative }
                       type="button"
                       data-testid="correct-answer"
                       className={ `${style.buttons} ${isCorrect && style.correct}` }
-                      onClick={ this.onAlternativeBtnClick }
+                      onClick={ () => this.onAlternativeBtnClick(alternative) }
                       disabled={ isDisabled }
                     >
                       { parse(`${alternative}`) }
@@ -141,6 +174,7 @@ Game.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
-export default Game;
+export default connect()(Game);
