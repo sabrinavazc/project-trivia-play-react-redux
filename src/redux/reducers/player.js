@@ -1,4 +1,4 @@
-import { ACTION_USER, UPDATE_SCORE, GET_RIGHTS } from '../actions';
+import { ADDS_PLAYER, UPDATE_SCORE, GET_RIGHTS } from '../actions';
 
 const INITAL_STATE = {
   email: '',
@@ -10,7 +10,7 @@ const INITAL_STATE = {
 
 const player = (state = INITAL_STATE, action) => {
   switch (action.type) {
-  case ACTION_USER:
+  case ADDS_PLAYER:
     return {
       ...state,
       email: action.payload.email,
@@ -32,3 +32,4 @@ const player = (state = INITAL_STATE, action) => {
 };
 
 export default player;
+
