@@ -15,6 +15,7 @@ class Game extends Component {
     isCorrect: false,
     isDisabled: false,
     timeRemaining: 0,
+    showNextButton: false,
   };
 
   componentDidMount() {
@@ -38,6 +39,7 @@ class Game extends Component {
     const timeRemaining = Math.floor(remainingMs / msConverter);
     this.setState({ isCorrect: true, timeRemaining }, () => {
       this.callUpdateScore(alternative);
+      this.setState({ showNextButton: true });
     });
   };
 
@@ -80,8 +82,27 @@ class Game extends Component {
     this.setState({ questions: results });
   };
 
+  handleNextButtonClick = () => {
+    const { questionIndex, questions } = this.state;
+    if (questionIndex < questions.length - 1) {
+      this.setState((prevState) => ({
+        questionIndex: prevState.questionIndex + 1,
+        isCorrect: false,
+        isDisabled: false,
+        showNextButton: false,
+      }));
+      this.start = Date.now();
+      this.timer = setTimeout(() => {
+        this.setState({ isDisabled: true });
+      }, this.interval);
+    } else {
+      this.history.push('/Feedback');
+    }
+  };
+
   render() {
-    const { questions, questionIndex, isCorrect, isDisabled } = this.state;
+    const {
+      questions, questionIndex, isCorrect, isDisabled, showNextButton } = this.state;
 
     if (questions.length === 0) {
       return (
@@ -128,6 +149,15 @@ class Game extends Component {
                       >
                         { letters[index] }
                       </span>
+                      {isCorrect && showNextButton && (
+                        <button
+                          type="button"
+                          data-testid="btn-next"
+                          onClick={ this.handleNextButtonClick }
+                        >
+                          Next
+                        </button>
+                      )}
                       <button
                         key={ alternative }
                         type="button"
