@@ -1,6 +1,12 @@
-import { ACTION_USER, UPDATE_SCORE } from '../actions';
+import { ACTION_USER, UPDATE_SCORE, GET_RIGHTS } from '../actions';
 
-const INITAL_STATE = { email: '', name: '', score: 0 };
+const INITAL_STATE = {
+  email: '',
+  name: '',
+  result: {},
+  score: 0,
+  assertions: 0,
+};
 
 const player = (state = INITAL_STATE, action) => {
   switch (action.type) {
@@ -15,6 +21,12 @@ const player = (state = INITAL_STATE, action) => {
       ...state,
       score: state.score + action.payload,
     };
+  case GET_RIGHTS:
+    return {
+      ...state,
+      assertions: state.assertions + action.payload,
+    };
+
   default: return state;
   }
 };
