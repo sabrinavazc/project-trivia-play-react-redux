@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 import { connect } from 'react-redux';
+import { FaCheck } from 'react-icons/fa';
+import { ImCross } from 'react-icons/im';
 import Header from '../components/Header';
 import fetchQuestions from '../helpers/fetchQuestions';
 import Loading from '../components/Loading';
@@ -77,13 +79,14 @@ class Game extends Component {
         alternatives[j] = temp;
       }
 
-      question.alternatives = alternatives;
+      question.shuffledAlternatives = alternatives;
     });
     this.setState({ questions: results });
   };
 
   handleNextButtonClick = () => {
     const { questionIndex, questions } = this.state;
+    const { history } = this.props;
     if (questionIndex < questions.length - 1) {
       this.setState((prevState) => ({
         questionIndex: prevState.questionIndex + 1,
@@ -96,7 +99,7 @@ class Game extends Component {
         this.setState({ isDisabled: true });
       }, this.interval);
     } else {
-      this.history.push('/Feedback');
+      history.push('/feedback');
     }
   };
 
@@ -113,7 +116,7 @@ class Game extends Component {
     }
 
     const question = questions[questionIndex];
-    const { alternatives } = question;
+    const { shuffledAlternatives } = question;
 
     let incorrectIndex = 0;
     const letters = ['A', 'B', 'C', 'D'];
@@ -138,22 +141,22 @@ class Game extends Component {
             className={ style.alternatives }
           >
             {
-              alternatives.map((alternative, index) => {
-                if (question.incorrect_answers.includes(alternative)) {
+              shuffledAlternatives.map((alternative, index) => {
+                if (question.correct_answer === alternative) {
                   incorrectIndex += 1;
                   return (
                     <>
                       <span
                         key={ letters[index] + alternative }
-                        className={ style.letters }
+                        className={ `${style.letters} ${isCorrect && style.check}` }
                       >
-                        { letters[index] }
+                        { isCorrect ? <FaCheck /> : letters[index] }
                       </span>
                       <button
                         key={ alternative }
                         type="button"
-                        data-testid={ `wrong-answer-${incorrectIndex - 1}` }
-                        className={ `${style.buttons} ${isCorrect && style.incorrect}` }
+                        data-testid="correct-answer"
+                        className={ `${style.buttons} ${isCorrect && style.correct}` }
                         onClick={ () => this.onAlternativeBtnClick(alternative) }
                         disabled={ isDisabled }
                       >
@@ -166,15 +169,15 @@ class Game extends Component {
                   <>
                     <span
                       key={ letters[index] + alternative }
-                      className={ style.letters }
+                      className={ `${style.letters} ${isCorrect && style.cross}` }
                     >
-                      { letters[index] }
+                      { isCorrect ? <ImCross /> : letters[index] }
                     </span>
                     <button
                       key={ alternative }
                       type="button"
-                      data-testid="correct-answer"
-                      className={ `${style.buttons} ${isCorrect && style.correct}` }
+                      data-testid={ `wrong-answer-${incorrectIndex - 1}` }
+                      className={ `${style.buttons} ${isCorrect && style.incorrect}` }
                       onClick={ () => this.onAlternativeBtnClick(alternative) }
                       disabled={ isDisabled }
                     >

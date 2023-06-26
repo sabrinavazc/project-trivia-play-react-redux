@@ -28,11 +28,13 @@ class Header extends Component {
       <header>
         <img data-testid="header-profile-picture" src={ photo } alt={ name } />
         <p data-testid="header-player-name">{ name }</p>
-        <p data-testid="header-score">
+        <p>
           <BsFillStarFill />
           Pontos:
           { ' ' }
-          { score }
+          <span data-testid="header-score">
+            { score }
+          </span>
         </p>
       </header>
     );
