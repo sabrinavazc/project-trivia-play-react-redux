@@ -8,7 +8,7 @@ import Header from '../components/Header';
 import fetchQuestions from '../helpers/fetchQuestions';
 import Loading from '../components/Loading';
 import style from './Game.module.css';
-import { updateScore } from '../redux/actions';
+import { updateScore, updateCorrect } from '../redux/actions';
 
 class Game extends Component {
   state = {
@@ -18,6 +18,7 @@ class Game extends Component {
     isDisabled: false,
     timeRemaining: 0,
     showNextButton: false,
+    howManyCorrects: 0,
   };
 
   componentDidMount() {
@@ -54,6 +55,8 @@ class Game extends Component {
     if (alternative === questions[questionIndex].correct_answer) {
       const finalScore = (baseScore + (timeRemaining * levels[difficulty]));
       dispatch(updateScore(finalScore));
+      this.setState((prev) => ({ howManyCorrects: prev.howManyCorrects + 1 }), () => {
+      });
     }
   };
 
@@ -85,8 +88,8 @@ class Game extends Component {
   };
 
   handleNextButtonClick = () => {
-    const { questionIndex, questions } = this.state;
-    const { history } = this.props;
+    const { questionIndex, questions, howManyCorrects } = this.state;
+    const { history, dispatch } = this.props;
     if (questionIndex < questions.length - 1) {
       this.setState((prevState) => ({
         questionIndex: prevState.questionIndex + 1,
@@ -99,6 +102,7 @@ class Game extends Component {
         this.setState({ isDisabled: true });
       }, this.interval);
     } else {
+      dispatch(updateCorrect(howManyCorrects));
       history.push('/feedback');
     }
   };

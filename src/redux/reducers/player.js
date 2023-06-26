@@ -1,4 +1,4 @@
-import { ADDS_PLAYER, UPDATE_SCORE, GET_RIGHTS } from '../actions';
+import { ADDS_PLAYER, UPDATE_SCORE, UPDATE_CORRECT } from '../actions';
 
 const INITAL_STATE = {
   email: '',
@@ -21,10 +21,10 @@ const player = (state = INITAL_STATE, action) => {
       ...state,
       score: state.score + action.payload,
     };
-  case GET_RIGHTS:
+  case UPDATE_CORRECT:
     return {
       ...state,
-      assertions: state.assertions + action.payload,
+      assertions: action.payload,
     };
 
   default: return state;
