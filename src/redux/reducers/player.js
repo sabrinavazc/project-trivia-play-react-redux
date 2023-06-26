@@ -15,6 +15,7 @@ const player = (state = INITAL_STATE, action) => {
       ...state,
       email: action.payload.email,
       name: action.payload.name,
+      score: 0,
     };
   case UPDATE_SCORE:
     return {
@@ -24,7 +25,7 @@ const player = (state = INITAL_STATE, action) => {
   case UPDATE_CORRECT:
     return {
       ...state,
-      assertions: action.payload,
+      assertions: state.assertions + action.payload,
     };
 
   default: return state;
