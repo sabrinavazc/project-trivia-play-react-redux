@@ -140,7 +140,7 @@ class Game extends Component {
           >
             {
               shuffledAlternatives.map((alternative, index) => {
-                if (question.incorrect_answers.includes(alternative)) {
+                if (question.correct_answer === alternative) {
                   incorrectIndex += 1;
                   return (
                     <>
@@ -153,8 +153,8 @@ class Game extends Component {
                       <button
                         key={ alternative }
                         type="button"
-                        data-testid={ `wrong-answer-${incorrectIndex - 1}` }
-                        className={ `${style.buttons} ${isCorrect && style.incorrect}` }
+                        data-testid="correct-answer"
+                        className={ `${style.buttons} ${isCorrect && style.correct}` }
                         onClick={ () => this.onAlternativeBtnClick(alternative) }
                         disabled={ isDisabled }
                       >
@@ -174,8 +174,8 @@ class Game extends Component {
                     <button
                       key={ alternative }
                       type="button"
-                      data-testid="correct-answer"
-                      className={ `${style.buttons} ${isCorrect && style.correct}` }
+                      data-testid={ `wrong-answer-${incorrectIndex - 1}` }
+                      className={ `${style.buttons} ${isCorrect && style.incorrect}` }
                       onClick={ () => this.onAlternativeBtnClick(alternative) }
                       disabled={ isDisabled }
                     >
