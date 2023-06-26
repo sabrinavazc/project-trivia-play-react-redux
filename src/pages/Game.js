@@ -77,13 +77,14 @@ class Game extends Component {
         alternatives[j] = temp;
       }
 
-      question.alternatives = alternatives;
+      question.shuffledAlternatives = alternatives;
     });
     this.setState({ questions: results });
   };
 
   handleNextButtonClick = () => {
     const { questionIndex, questions } = this.state;
+    const { history } = this.props;
     if (questionIndex < questions.length - 1) {
       this.setState((prevState) => ({
         questionIndex: prevState.questionIndex + 1,
@@ -96,7 +97,7 @@ class Game extends Component {
         this.setState({ isDisabled: true });
       }, this.interval);
     } else {
-      this.history.push('/Feedback');
+      history.push('/feedback');
     }
   };
 
@@ -113,7 +114,7 @@ class Game extends Component {
     }
 
     const question = questions[questionIndex];
-    const { alternatives } = question;
+    const { shuffledAlternatives } = question;
 
     let incorrectIndex = 0;
     const letters = ['A', 'B', 'C', 'D'];
@@ -138,7 +139,7 @@ class Game extends Component {
             className={ style.alternatives }
           >
             {
-              alternatives.map((alternative, index) => {
+              shuffledAlternatives.map((alternative, index) => {
                 if (question.incorrect_answers.includes(alternative)) {
                   incorrectIndex += 1;
                   return (
