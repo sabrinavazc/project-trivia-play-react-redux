@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
 import PropTypes from 'prop-types';
+import Header from '../components/Header';
 
 class Feedback extends Component {
   handleClickPlayAgain = () => {
@@ -21,6 +22,7 @@ class Feedback extends Component {
     return (
       <main>
         <div>
+          <Header />
           <img
             data-testid="header-profile-picture"
             src={ `https://www.gravatar.com/avatar/${md5(email).toString()}` }
@@ -44,7 +46,7 @@ class Feedback extends Component {
           <p>
             Um total de
             <span
-              data-testid="header-score"
+              data-testid="feedback-total-score"
             >
               { ' ' }
               { score }
