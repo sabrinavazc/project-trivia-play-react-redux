@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import parse from 'html-react-parser';
 import { connect } from 'react-redux';
+import { FaCheck } from 'react-icons/fa';
+import { ImCross } from 'react-icons/im';
 import Header from '../components/Header';
 import fetchQuestions from '../helpers/fetchQuestions';
 import Loading from '../components/Loading';
@@ -146,9 +148,9 @@ class Game extends Component {
                     <>
                       <span
                         key={ letters[index] + alternative }
-                        className={ style.letters }
+                        className={ `${style.letters} ${isCorrect && style.check}` }
                       >
-                        { letters[index] }
+                        { isCorrect ? <FaCheck /> : letters[index] }
                       </span>
                       <button
                         key={ alternative }
@@ -167,9 +169,9 @@ class Game extends Component {
                   <>
                     <span
                       key={ letters[index] + alternative }
-                      className={ style.letters }
+                      className={ `${style.letters} ${isCorrect && style.cross}` }
                     >
-                      { letters[index] }
+                      { isCorrect ? <ImCross /> : letters[index] }
                     </span>
                     <button
                       key={ alternative }
