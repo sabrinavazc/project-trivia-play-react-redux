@@ -149,15 +149,6 @@ class Game extends Component {
                       >
                         { letters[index] }
                       </span>
-                      {isCorrect && showNextButton && (
-                        <button
-                          type="button"
-                          data-testid="btn-next"
-                          onClick={ this.handleNextButtonClick }
-                        >
-                          Next
-                        </button>
-                      )}
                       <button
                         key={ alternative }
                         type="button"
@@ -193,6 +184,17 @@ class Game extends Component {
                 );
               })
             }
+          </section>
+          <section>
+            {isCorrect && showNextButton && (
+              <button
+                type="button"
+                data-testid="btn-next"
+                onClick={ this.handleNextButtonClick }
+              >
+                Next
+              </button>
+            )}
           </section>
         </main>
       </>
