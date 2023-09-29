@@ -10,9 +10,9 @@ Aqui a Trybe nos ofereceu o desafio de construir um jogo de perguntas e resposta
 
 </details>
 
-<details>
-  <summary><strong>:memo: Habilidades que trabalhamos:</strong></summary><br />
 
+  <summary><strong>:memo: Habilidades que trabalhamos:</strong></summary><br />
+  
   - Criar um store Redux em aplicações React
 
   - Criar reducers no Redux em aplicações React
@@ -26,5 +26,5 @@ Aqui a Trybe nos ofereceu o desafio de construir um jogo de perguntas e resposta
   - Criar actions assíncronas na sua aplicação React que faz uso de Redux.
 
   - Escrever testes para garantir que sua aplicação possua uma boa cobertura de testes.
-</details>
+
 
